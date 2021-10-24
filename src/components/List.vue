@@ -9,19 +9,19 @@
           <form @submit.prevent="addtodo">
             <div class="row input__group">
               <div>
-                <q-input input-style="width: 350px;" outlined bg-color="white" color="grey-9" v-model="todo.description" label="Outlined" />
+                <q-input input-style="width: 350px;"  maxlength="30" outlined bg-color="white" color="grey-9" v-model="todo.title" label="Outlined" />
               </div>
               <q-btn color="black" label="adicionar" />
             </div>
-            <q-card class="card-form" v-for="(item, index) in todos" v-bind:key="index">
+            <q-card class="card-form" v-for="(item, index) in todos" v-bind:key="index" @click="descriptionDialog = true">
               <div>
-                <q-avatar class="card_form_avatar">
+                <q-avatar class="card-form__avatar">
                   <img src="https://cdn.quasar.dev/img/avatar.png">
                 </q-avatar>
               </div>
               
-              <div class="card__form__description text-bold">
-                {{item.description}}
+              <div class="card-form__description">
+                {{item.title}}
               </div>
               <div class="card__form__indice">
                 {{index +1}} 
@@ -31,6 +31,23 @@
                   <box-icon name="trash"></box-icon>
                 </q-btn>
               </div>
+
+              <q-dialog v-model="descriptionDialog">
+                <q-card>
+                  <q-card-section>
+                    <div class="text-h4">{{item.title.toUpperCase()}}</div>
+                  </q-card-section>
+
+               <q-card-section class="q-pt-none">
+                  <q-input v-model="item.description" filled autogrow/>
+               </q-card-section>
+
+                <q-card-actions align="right" class="text-primary">
+                  <q-btn flat label="Close" v-close-popup />
+                  </q-card-actions>
+                </q-card>
+              </q-dialog>
+
             </q-card>
           </form>
         </div>
@@ -45,7 +62,9 @@ export default {
   data() {
     return { 
       todos: [],
-      todo: { checked: false } 
+      todo: { checked: false },
+      descriptionDialog: false,
+      selectedItem: ''
     };
   },
   methods: {
@@ -65,7 +84,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .img-logo {
   max-width: 100px;
   margin: 10% auto;
@@ -92,17 +111,23 @@ export default {
   color: white;
   border-radius: 2%; 
   box-shadow: 3px 2px 2px 1px rgba(0, 0, 0, 0.2); 
-}
-.card_form_avatar {
-  margin:18%;
-}
+  cursor: pointer;
+  &__avatar {
+    margin:18%;
+  }
+  &__description {
+    margin: 5%;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    flex-wrap: wrap;
+    font-weight: 700;
+  }
+  &:hover {
+    background: red;
+  }
 
-.card__form__description {
-  margin: 5%;
-  display: flex;
-  align-items: center; 
-  justify-content: center;
-  flex-wrap: wrap;
+  
 }
 .card__form__indice {
   margin: 5%;
